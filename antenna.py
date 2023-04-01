@@ -16,8 +16,6 @@ def get_angles(index) -> str: # select wanted EL and AZ set
     cmd += bits(data.J1[index])
     return cmd
 
-print(type(get_angles(0)))
-
 def do_zero() -> None: # set all 4 phase shifters to 0
     board.digital[23].write(0)
     for i in range(0,24):
