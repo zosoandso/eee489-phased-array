@@ -4,7 +4,7 @@ import time
 import pyfirmata
 
 PAUSE = 0.005 # 'clock' period
-ZERO = (0, 90)
+ZERO = (0, 90) # tuples for test pointing
 UP = (0, 60)
 LEFT = (90, 83)
 RIGHT = (270, 82.8)
@@ -18,7 +18,7 @@ def bits(angle: float) -> str:
     return bin(int(angle / 22.5) * 4)[2:].zfill(6)
 
 def get_angles(point: Tuple[float, float]) -> str: # select wanted EL and AZ
-    for i in range(0, len(data)):            # phase shift set
+    for i in range(0, len(data)):                  # phase shift set
         if data.AZ[i] == point[0] and data.EL[i] == point[1]:
             cmd  = bits(data.J4[i])
             cmd += bits(data.J3[i])
