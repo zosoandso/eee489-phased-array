@@ -16,7 +16,7 @@ RIGHT = (270, 82.8)
 UP_L = (45, 45)
 UP_R = (315, 45)
 
-#board = pyfirmata.ArduinoMega('/dev/cu.usbmodem101')
+board = pyfirmata.ArduinoMega('/dev/cu.usbmodem101')
 data = pd.read_csv('lookangles.csv')
 
 def bits(angle: float) -> str:
