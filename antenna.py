@@ -1,6 +1,8 @@
 from typing import Tuple
 import pandas as pd
 import time
+import subprocess as sp
+import re
 import pyfirmata
 
 PAUSE = 0.005 # 'clock' period
@@ -43,3 +45,9 @@ def do_shift(shift: str) -> None: # phase shifter command function
     time.sleep(PAUSE)
     board.digital[27].write(0)
     time.sleep(PAUSE)
+
+def get_power_level() -> None:
+    power = sp.check_output('iwconfig')
+    power = power.decode('utf-8')
+    match = re.search(r'(?<=Signal level=)-\d\d', power)
+    print(match.group())
