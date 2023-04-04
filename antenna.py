@@ -56,6 +56,8 @@ def get_rssi() -> int: # get rssi on lucas' linux pc
     return int(match.group())
 
 def plot_beam(point: Tuple[float, float]) -> None:
+    plt.close('all')
+    plt.ion()
     fig = plt.figure()
     ax = fig.add_subplot(projection='polar')
 
@@ -67,5 +69,4 @@ def plot_beam(point: Tuple[float, float]) -> None:
     ax.set_rlabel_position(0) # move radial labels away from plotted line
     ax.grid(True)
 
-    plt.savefig('figure.png')
-    plt.clf()
+    plt.pause(0.5)
