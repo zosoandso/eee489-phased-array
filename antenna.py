@@ -1,12 +1,14 @@
 from typing import Tuple
 import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 import time
 import subprocess as sp
 import re
 import pyfirmata
 
-PAUSE = 0.005 # 'clock' period
-ZERO = (0, 90) # tuples for test pointing
+PAUSE = 0.005  # 'clock' period
+ZERO = (0, 90) # tuples for test pointing (azimuth, elevation)
 UP = (0, 60)
 LEFT = (90, 83)
 RIGHT = (270, 82.8)
@@ -46,8 +48,23 @@ def do_shift(shift: str) -> None: # phase shifter command function
     board.digital[27].write(0)
     time.sleep(PAUSE)
 
-def get_power_level() -> float:
+def get_rssi() -> int: # get rssi on lucas' linux pc
     power = sp.check_output(['iwconfig', 'wlp6s0'])
     power = power.decode('utf-8')
     match = re.search('-\d\d', power)
-    return float(match.group())
+    return int(match.group())
+
+def plot_beam(point: Tuple[float, float]) -> None:
+    plt.close('all')
+    
+    fig = plt.figure()
+    ax = fig.add_subplot(projection='polar')
+    ax.scatter(point[0] * np.pi / 180, point[1],
+               c=0, s=20, cmap='hsv', alpha=0.75)
+    ax.set_rmax(90)
+    ax.set_theta_offset(np.pi / 2)
+    ax.set_rticks([15, 30, 45, 60, 75, 90]) # less radial ticks
+    ax.set_rlabel_position(0) # move radial labels away from plotted line
+    ax.grid(True)
+
+    plt.show()
