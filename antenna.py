@@ -2,6 +2,7 @@ from typing import Tuple
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 import time
 import subprocess as sp
 import re
@@ -15,7 +16,7 @@ RIGHT = (270, 82.8)
 UP_L = (45, 45)
 UP_R = (315, 45)
 
-board = pyfirmata.ArduinoMega('/dev/cu.usbmodem101')
+#board = pyfirmata.ArduinoMega('/dev/cu.usbmodem101')
 data = pd.read_csv('lookangles.csv')
 
 def bits(angle: float) -> str:
@@ -55,11 +56,10 @@ def get_rssi() -> int: # get rssi on lucas' linux pc
     return int(match.group())
 
 def plot_beam(point: Tuple[float, float]) -> None:
-    plt.close('all')
-    
     fig = plt.figure()
     ax = fig.add_subplot(projection='polar')
-    ax.scatter(point[0] * np.pi / 180, point[1],
+
+    ax.scatter(point[0] * np.pi / 180, 90 - point[1],
                c=0, s=20, cmap='hsv', alpha=0.75)
     ax.set_rmax(90)
     ax.set_theta_offset(np.pi / 2)
@@ -67,4 +67,5 @@ def plot_beam(point: Tuple[float, float]) -> None:
     ax.set_rlabel_position(0) # move radial labels away from plotted line
     ax.grid(True)
 
-    plt.show()
+    plt.savefig('figure.png')
+    plt.clf()
