@@ -15,7 +15,7 @@ def quick_search() -> None:
                     point =  (an.data.AZ[i], an.data.EL[i])
                     an.do_shift(point)
                     an.plot_beam(point)
-                    power.append(an.get_rssi())
+                    power.append(an.get_rssi_mac())
     print(f'Best RSSI: {max(power)}')
     print(f'Azimuth: {an.data.AZ[power.index(max(power))]}')
     print(f'Elevation: {an.data.EL[power.index(max(power))]}')

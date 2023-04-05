@@ -1,15 +1,17 @@
 from typing import Tuple
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import time
 import subprocess as sp
-import re
 import pyfirmata
+import time
+import re
 
-PAUSE = 0.01  # 'clock' period
+PAUSE = 0.001  # 'clock' period
 
-board = pyfirmata.ArduinoMega('/dev/cu.usbmodem101')
+board = pyfirmata.ArduinoMega('/dev/cu.usbmodem1101') # mac
+#board = pyfirmata.ArduinoMega('dev/ttyACM0') # linux
 data = pd.read_csv('lookangles.csv')
 
 def bits(angle: float) -> str:
@@ -43,8 +45,14 @@ def do_shift(point: Tuple[float, float]) -> None: # phase shift command
     board.digital[27].write(0)
     time.sleep(PAUSE)
 
-def get_rssi() -> int: # get rssi on lucas' linux pc
+def get_rssi_linux() -> int:
     power = sp.check_output(['iwconfig', 'wlp6s0'])
+    power = power.decode('utf-8')
+    match = re.search('-\d\d', power)
+    return int(match.group())
+
+def get_rssi_mac() -> int: 
+    power = sp.check_output(['airport', '-I'])
     power = power.decode('utf-8')
     match = re.search('-\d\d', power)
     return int(match.group())
