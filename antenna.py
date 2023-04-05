@@ -7,7 +7,7 @@ import subprocess as sp
 import re
 import pyfirmata
 
-PAUSE = 0.001  # 'clock' period
+PAUSE = 0.01  # 'clock' period
 
 board = pyfirmata.ArduinoMega('/dev/cu.usbmodem101')
 data = pd.read_csv('lookangles.csv')
@@ -15,17 +15,18 @@ data = pd.read_csv('lookangles.csv')
 def bits(angle: float) -> str:
     return bin(int(angle / 22.5) * 4)[2:].zfill(6)
 
-def get_command(point: Tuple[float, float]) -> str: # select wanted EL and AZ
+def get_shift(point: Tuple[float, float]) -> str: # select wanted EL and AZ
     for i in range(0, len(data)):                  # phase shift set
         if data.AZ[i] == point[0] and data.EL[i] == point[1]:
-            cmd  = bits(data.J4[i])
-            cmd += bits(data.J3[i])
-            cmd += bits(data.J2[i])
-            cmd += bits(data.J1[i])
+            shift  = bits(data.J4[i])
+            shift += bits(data.J3[i])
+            shift += bits(data.J2[i])
+            shift += bits(data.J1[i])
             break
-    return cmd
+    return shift
 
-def do_shift(shift: str) -> None: # phase shifter command function
+def do_shift(point: Tuple[float, float]) -> None: # phase shift command
+    shift = get_shift(point)
     for i in range(0,len(shift)):
         if shift[i] == '1':
             board.digital[23].write(1)
