@@ -55,12 +55,13 @@ def plot_beam(point: Tuple[float, float]) -> None:
     fig = plt.figure()
     ax = fig.add_subplot(projection='polar')
 
-    ax.scatter(point[0] * np.pi / 180, 90 - point[1],
+    ax.scatter(point[0] * np.pi / 180, point[1],
                c=0, s=20, cmap='hsv', alpha=0.75)
     ax.set_rmax(90)
     ax.set_theta_offset(np.pi / 2)
     ax.set_rticks([15, 30, 45, 60, 75, 90]) # less radial ticks
     ax.set_rlabel_position(0) # move radial labels away from plotted line
+    ax.invert_yaxis()
     ax.grid(True)
 
     fig.canvas.draw()
