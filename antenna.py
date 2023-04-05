@@ -8,13 +8,7 @@ import subprocess as sp
 import re
 import pyfirmata
 
-PAUSE = 0.005  # 'clock' period
-ZERO = (0, 90) # tuples for test pointing (azimuth, elevation)
-UP = (0, 60)
-LEFT = (90, 83)
-RIGHT = (270, 82.8)
-UP_L = (45, 45)
-UP_R = (315, 45)
+PAUSE = 0.001  # 'clock' period
 
 board = pyfirmata.ArduinoMega('/dev/cu.usbmodem101')
 data = pd.read_csv('lookangles.csv')
@@ -22,7 +16,7 @@ data = pd.read_csv('lookangles.csv')
 def bits(angle: float) -> str:
     return bin(int(angle / 22.5) * 4)[2:].zfill(6)
 
-def get_angles(point: Tuple[float, float]) -> str: # select wanted EL and AZ
+def get_command(point: Tuple[float, float]) -> str: # select wanted EL and AZ
     for i in range(0, len(data)):                  # phase shift set
         if data.AZ[i] == point[0] and data.EL[i] == point[1]:
             cmd  = bits(data.J4[i])
@@ -69,4 +63,5 @@ def plot_beam(point: Tuple[float, float]) -> None:
     ax.set_rlabel_position(0) # move radial labels away from plotted line
     ax.grid(True)
 
-    plt.pause(0.5)
+    fig.canvas.draw()
+    fig.canvas.flush_events()
