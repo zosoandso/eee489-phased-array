@@ -1,5 +1,4 @@
 from typing import Tuple
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -10,15 +9,15 @@ import re
 
 PAUSE = 0.001  # 'clock' period
 
-board = pyfirmata.ArduinoMega('/dev/cu.usbmodem1101') # mac
 #board = pyfirmata.ArduinoMega('dev/ttyACM0') # linux
+board = pyfirmata.ArduinoMega('/dev/cu.usbmodem101') # mac
 data = pd.read_csv('lookangles.csv')
 
 def bits(angle: float) -> str:
     return bin(int(angle / 22.5) * 4)[2:].zfill(6)
 
 def get_shift(point: Tuple[float, float]) -> str: # select wanted EL and AZ
-    for i in range(0, len(data)):                  # phase shift set
+    for i in range(0, len(data)):                 # phase shift set
         if data.AZ[i] == point[0] and data.EL[i] == point[1]:
             shift  = bits(data.J4[i])
             shift += bits(data.J3[i])
