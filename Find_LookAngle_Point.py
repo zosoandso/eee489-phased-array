@@ -17,14 +17,13 @@ def Find_LookAngle_Point(point: Tuple[float, float],Dir):
     scope = 15
     
     match Dir:
-        case 1:
-            if El == 90:
-                Look = newData[147-1] #147th data point [270,82.8]
-                I = 0
-                found = True
-                
+        case 1:               
             while found == False:
-                if Az+scope < 360:
+                if El == 90:
+                    Look = newData[146-1:146] #146th data point [270,82.8]
+                    I = [0]
+                    found = True
+                elif Az+scope < 360:
                     Look = newData[np.nonzero(np.logical_and(np.logical_and(newData[:,0] < (Az+scope),newData[:,0] > Az), abs(newData[:,1]-El) < tolerance))]
                     I = np.argsort(Look[:,0])
                 elif Az+scope>=360:
@@ -58,14 +57,13 @@ def Find_LookAngle_Point(point: Tuple[float, float],Dir):
                     
             return Look_sort[0]
             
-        case 2:
-            if El == 90:
-                Look = newData[51-1] #51st data point [90,83]
-                I = 0
-                found = True
-                
+        case 2:                
             while found == False:
-                if Az-scope >= 0:
+                if El == 90:
+                    Look = newData[50-1:50] #50th data point [90,83]
+                    I = [0]
+                    found = True
+                elif Az-scope >= 0:
                     Look = newData[np.nonzero(np.logical_and(np.logical_and(newData[:,0] > (Az-scope),newData[:,0] < Az), abs(newData[:,1]-El) < tolerance))]
                     I = np.argsort(Look[:,0])[::-1]
                 elif Az-scope < 0:
@@ -100,14 +98,13 @@ def Find_LookAngle_Point(point: Tuple[float, float],Dir):
                     
             return Look_sort[0]
         
-        case 3:
-            if El == 90:
-                Look = newData[9-1] #ninth data point [0,82.8]
-                I = 0
-                found = True
-            
+        case 3:         
             while found == False:
-                if abs(90-(El+scope)) <= 5:
+                if El == 90:
+                    Look = newData[8-1:8] #eigth data point [0,82.8]
+                    I = [0]
+                    found = True
+                elif abs(90-(El+scope)) <= 5:
                     Look = newData[0:1]
                     I=[0]
                 elif El+scope < 85:
@@ -152,16 +149,15 @@ def Find_LookAngle_Point(point: Tuple[float, float],Dir):
                     
             return Look_sort[0]
         
-        case 4:
-            if El == 90:
-                Look = newData[99-1] #99th data point [90,82.8]
-                I = 0
-                found = True
-                
+        case 4:                
             while found == False:
                 if El < 12.4:
                     El=El+scope+1
-                if El-scope > 0:
+                if El == 90:
+                    Look = newData[98-1:98] #98th data point [90,82.8]
+                    I = [0]
+                    found = True
+                elif El-scope > 0:
                     Look = newData[np.nonzero(np.logical_and(np.logical_and(newData[:,1] > (El-scope),newData[:,1] < El), abs(newData[:,0] - Az) < tolerance))]
                     I = np.argsort(Look[:,1])[::-1]
                 elif El-scope <=0: #infinite loops if El < 10, shouldn't happen as the lowest points are 12.X
