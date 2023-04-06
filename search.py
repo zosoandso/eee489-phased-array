@@ -21,7 +21,7 @@ def quick_search() -> Tuple[float, float]:
                         best_point = point   
     return best_point
 
-def search_nearby_az(point: Tuple[float, float]) -> Tuple[float, float]:
+def search_nearby(point: Tuple[float, float]) -> Tuple[float, float]:
     power = -100
     if point[0] + 15 > 360:
         for i in range(0, len(an.data)):
