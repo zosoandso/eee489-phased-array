@@ -23,14 +23,38 @@ def quick_search() -> Tuple[float, float]:
 
 def search_nearby_az(point: Tuple[float, float]) -> Tuple[float, float]:
     power = -100
-    for i in range(0, len(an.data)):
-        if (an.data.AZ[i] < (point[0] + 20) % 360 and
-            an.data.AZ[i] > 0) or (an.data.AZ[i] < 360 and
-                                   an.data.AZ[i] > (point[0] - 20) % 360):
-            move = (an.data.AZ[i], an.data.EL[i])
-            an.do_shift(move)
-            an.plot_beam(move)
-            if an.get_rssi_mac() > power:
-                power = an.get_rssi_mac()
-                best_move = move
+    if point[0] + 20 > 360:
+        for i in range(0, len(an.data)):
+            if ((an.data.AZ[i] < point[0] + 20 and
+                 an.data.AZ[i] > point[0] - 20) or
+                 (an.data.AZ[i] < (point[0] + 20) % 360 and
+                  an.data.AZ[i] > 0)):
+                move = (an.data.AZ[i], an.data.EL[i])
+                an.do_shift(move)
+                an.plot_beam(move)
+                if an.get_rssi_mac() > power:
+                    power = an.get_rssi_mac()
+                    best_move = move
+    elif point[0] - 20 < 0:
+        for i in range(0, len(an.data)):
+            if ((an.data.AZ[i] > point[0] - 20 and
+                 an.data.AZ[i] < point[0] + 20) or
+                 (an.data.AZ[i] > (point[0] - 20) % 360 and
+                  an.data.AZ[i] < 360)):
+                move = (an.data.AZ[i], an.data.EL[i])
+                an.do_shift(move)
+                an.plot_beam(move)
+                if an.get_rssi_mac() > power:
+                    power = an.get_rssi_mac()
+                    best_move = move
+    else:
+        for i in range(0, len(an.data)):
+            if (an.data.AZ[i] > point[0] - 20 and
+                 an.data.AZ[i] < point[0] + 20):
+                move = (an.data.AZ[i], an.data.EL[i])
+                an.do_shift(move)
+                an.plot_beam(move)
+                if an.get_rssi_mac() > power:
+                    power = an.get_rssi_mac()
+                    best_move = move
     return best_move

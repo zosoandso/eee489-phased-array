@@ -6,8 +6,10 @@ while True:
     if prompt == '':
         break
     elif prompt == 'search':
-        initial_point = search.quick_search()
-        an.do_shift(initial_point)
-        an.plot_beam(initial_point)
+        point = search.quick_search()
+        print(point)
+        point = search.search_nearby_az(point)
+        an.do_shift(point)
+        an.plot_beam(point)
     else:
         print('Invalid entry: try again.')
