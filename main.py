@@ -8,7 +8,7 @@ while True:
     elif prompt == 'search':
         point = search.quick_search()
         print(point)
-        point = search.search_nearby_az(point)
+        point = search.search_nearby(point)
         an.do_shift(point)
         an.plot_beam(point)
     else:
