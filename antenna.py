@@ -62,7 +62,7 @@ def plot_beam(point: Tuple[float, float]) -> None:
     ax = plt.subplot(111, projection='polar')
     ax.scatter((point[0] * np.pi) / 180, point[1])
     ax.set_rmax(90)
-    ax.set_rticks([30, 60, 90])
+    ax.set_rticks([15, 30, 45, 60, 75, 90])
     ax.set_theta_offset(np.pi / 2)
     ax.set_rlabel_position(0)
     ax.set_ylim([90, 0])
