@@ -10,7 +10,7 @@ import re
 PAUSE = 0.001  # 'clock' period
 
 #board = pyfirmata.ArduinoMega('dev/ttyACM0') # linux
-board = pyfirmata.ArduinoMega('/dev/cu.usbmodem101') # mac
+board = pyfirmata.ArduinoMega('/dev/cu.usbmodem1101') # mac
 data = pd.read_csv('lookangles.csv')
 
 def bits(angle: float) -> str:
@@ -57,19 +57,15 @@ def get_rssi_mac() -> int:
     return int(match.group())
 
 def plot_beam(point: Tuple[float, float]) -> None:
-    plt.close('all')
-    plt.ion()
-    fig = plt.figure()
-    ax = fig.add_subplot(projection='polar')
+    plt.clf()
 
-    ax.scatter(point[0] * np.pi / 180, point[1],
-               c=0, s=20, cmap='hsv', alpha=0.75)
+    ax = plt.subplot(111, projection='polar')
+    ax.scatter((point[0] * np.pi) / 180, point[1])
     ax.set_rmax(90)
+    ax.set_rticks([30, 60, 90])
     ax.set_theta_offset(np.pi / 2)
-    ax.set_rticks([15, 30, 45, 60, 75, 90]) # less radial ticks
-    ax.set_rlabel_position(0) # move radial labels away from plotted line
-    ax.invert_yaxis()
+    ax.set_rlabel_position(0)
+    ax.set_ylim([90, 0])
     ax.grid(True)
 
-    fig.canvas.draw()
-    fig.canvas.flush_events()
+    plt.savefig(fname='point.pdf', format='pdf')
