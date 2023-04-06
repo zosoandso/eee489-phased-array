@@ -9,7 +9,6 @@ def dumb_search() -> None: # just a test demo don't use
 
 def quick_search() -> Tuple[float, float]:
     power = -100
-    best_point = (0, 0)
     for i in range(0, len(an.data)):
         for angle in [0, 45, 90, 135, 180, 225, 270, 315]:
             if an.data.AZ[i] == angle:
@@ -21,3 +20,17 @@ def quick_search() -> Tuple[float, float]:
                         power = an.get_rssi_mac()
                         best_point = point   
     return best_point
+
+def search_nearby(point: Tuple[float, float]) -> Tuple[float, float]:
+    power = -100
+    for i in range(0, len(an.data)):
+        if (an.data.AZ[i] < (point[0] + 20) % 360 and
+            an.data.AZ[i] > 0) or (an.data.AZ[i] < 360 and
+                                   an.data.AZ[i] > (point[0] - 20) % 360):
+            move = (an.data.AZ[i], an.data.EL[i])
+            an.do_shift(move)
+            an.plot_beam(move)
+            if an.get_rssi_mac() > power:
+                power = an.get_rssi_mac()
+                best_move = move
+    return best_move
