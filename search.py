@@ -21,7 +21,3 @@ def quick_search() -> Tuple[float, float]:
                         power = an.get_rssi_mac()
                         best_point = point   
     return best_point
-
-def point_and_show(point: Tuple[float, float]) -> None:
-    an.do_shift(point)
-    an.plot_beam(point)

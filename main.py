@@ -1,3 +1,4 @@
+import antenna as an
 import search
 
 while True:
@@ -6,6 +7,7 @@ while True:
         break
     elif prompt == 'search':
         initial_point = search.quick_search()
-        search.point_and_show(initial_point)
+        an.do_shift(initial_point)
+        an.plot_beam(initial_point)
     else:
         print('Invalid entry: try again.')
