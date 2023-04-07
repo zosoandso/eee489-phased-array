@@ -12,8 +12,8 @@ SERIAL = 2
 CLOCK = 4
 ENABLE = 6
 
-#board = pyfirmata.ArduinoMega('dev/ttyACM0') # linux
-board = pyfirmata.ArduinoMega('/dev/cu.usbmodem101') # mac
+board = pyfirmata.ArduinoMega('dev/ttyACM0') # linux
+#board = pyfirmata.ArduinoMega('/dev/cu.usbmodem101') # mac
 #board = pyfirmata.ArduinoDue('COM') # travis' arduino on windows
 data = pd.read_csv('lookangles.csv')
 
@@ -47,7 +47,8 @@ def do_shift(point: Tuple[float, float]) -> None: # phase shift command
     write(ENABLE, 0)
 
 def check_signal() -> int:
-    power = sp.check_output(['nmcli', 'device', 'wifi'])
+    power = sp.run(['nmcli', 'device', 'wifi'],
+                   check=True, capture_output=True).stdout
     power = power.decode('utf-8')
     return power
 
