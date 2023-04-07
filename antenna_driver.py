@@ -48,9 +48,8 @@ def do_shift(point: Tuple[float, float]) -> None: # phase shift command
     write(ENABLE, 0)
 
 def check_signal() -> int:
-    power = sp.run(['iw', 'wlp6s0', 'station', 'dump',
-                    '|', 'grep', "''signal avg:"], check=True,
-                    capture_output=True).stdout
+    power = sp.run(['iw', 'wlp6s0', 'station', 'dump'],
+                   check=True, capture_output=True).stdout
     return power
 
 def get_rssi_mac() -> int: 
