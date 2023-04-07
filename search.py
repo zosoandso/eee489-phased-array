@@ -17,8 +17,8 @@ def quick_search() -> Tuple[float, float]:
                     point = (an.data.AZ[i], an.data.EL[i])
                     an.do_shift(point)
                     an.plot_beam(point)
-                    if an.get_rssi_mac() > power:
-                        power = an.get_rssi_mac()
+                    if an.check_signal() > power:
+                        power = an.check_signal()
                         best_point = point   
     return best_point
 
@@ -33,8 +33,8 @@ def search_nearby(point: Tuple[float, float]) -> Tuple[float, float]:
                 move = (an.data.AZ[i], an.data.EL[i])
                 an.do_shift(move)
                 an.plot_beam(move)
-                if an.get_rssi_mac() > power:
-                    power = an.get_rssi_mac()
+                if an.check_signal() > power:
+                    power = an.check_signal()
                     best_move = move
     elif point[0] - 15 < 0:
         for i in range(0, len(an.data)):
@@ -45,8 +45,8 @@ def search_nearby(point: Tuple[float, float]) -> Tuple[float, float]:
                 move = (an.data.AZ[i], an.data.EL[i])
                 an.do_shift(move)
                 an.plot_beam(move)
-                if an.get_rssi_mac() > power:
-                    power = an.get_rssi_mac()
+                if an.check_signal() > power:
+                    power = an.check_signal()
                     best_move = move
     else:
         for i in range(0, len(an.data)):
@@ -55,7 +55,7 @@ def search_nearby(point: Tuple[float, float]) -> Tuple[float, float]:
                 move = (an.data.AZ[i], an.data.EL[i])
                 an.do_shift(move)
                 an.plot_beam(move)
-                if an.get_rssi_mac() > power:
-                    power = an.get_rssi_mac()
+                if an.check_signal() > power:
+                    power = an.check_signal()
                     best_move = move
     return best_move
