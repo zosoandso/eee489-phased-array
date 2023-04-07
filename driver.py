@@ -35,7 +35,7 @@ def get_shift(point: Tuple[float, float]) -> str: # select wanted EL and AZ
 
 def do_shift(point: Tuple[float, float]) -> None: # phase shift command
     shift = get_shift(point)
-    for i in range(0,len(shift)):
+    for i in range(0, len(shift)):
         write(SERIAL, 1) if shift[i] == '1' else write(SERIAL, 0)
         write(CLOCK, 1)
         write(CLOCK, 0)
