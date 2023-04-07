@@ -27,10 +27,13 @@ def get_shift(point: Tuple[float, float]) -> str: # select wanted EL and AZ
     newData = np.loadtxt('lookangles.csv',delimiter=',' ,skiprows=1)
     phase = newData[np.nonzero(np.logical_and(newData[:,0]==point[0],
                                               newData[:,1]==point[1]))][0,2:]
-    shift  = bits(phase[0])
-    shift += bits(phase[1])
-    shift += bits(phase[2])
-    shift += bits(phase[3])  
+    if phase.shape[0] > 0:
+        shift  = bits(phase[0])
+        shift += bits(phase[1])
+        shift += bits(phase[2])
+        shift += bits(phase[3])
+    else:
+        shift = '000000000000000000000000'
     return shift
 
 def do_shift(point: Tuple[float, float]) -> None: # phase shift command
