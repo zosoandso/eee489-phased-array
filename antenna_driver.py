@@ -54,7 +54,7 @@ def check_signal() -> int:
     power = re.search('-\d\d', power.group())
     return int(power.group())
 
-def get_rssi_mac() -> int: 
+def get_rssi_mac() -> int:
     power = sp.check_output(['airport', '-I'])
     power = power.decode('utf-8')
     match = re.search('-\d\d', power)
