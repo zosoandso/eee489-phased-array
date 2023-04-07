@@ -1,4 +1,5 @@
 from typing import Tuple
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -49,7 +50,6 @@ def do_shift(point: Tuple[float, float]) -> None: # phase shift command
 def check_signal() -> int:
     power = sp.run(['nmcli', '-t', '-f', 'SSID,SIGNAL', 'device', 'wifi'],
                    check=True, capture_output=True).stdout
-    power = power.decode('utf-8')
     return power
 
 def get_rssi_mac() -> int: 

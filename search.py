@@ -1,5 +1,6 @@
 from typing import Tuple
-import antenna as an
+
+import antenna_driver as an
 
 def dumb_search() -> None: # just a test demo don't use
     for i in range(0, len(an.data)):
