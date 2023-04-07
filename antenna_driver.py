@@ -46,11 +46,10 @@ def do_shift(point: Tuple[float, float]) -> None: # phase shift command
     write(ENABLE, 1)
     write(ENABLE, 0)
 
-def get_rssi_linux() -> int:
-    power = sp.check_output(['iwconfig', 'wlp6s0'])
+def check_signal() -> int:
+    power = sp.check_output(['nmcli', 'device', 'wifi'])
     power = power.decode('utf-8')
-    match = re.search('-\d\d', power)
-    return int(match.group())
+    return power
 
 def get_rssi_mac() -> int: 
     power = sp.check_output(['airport', '-I'])
