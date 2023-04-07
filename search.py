@@ -15,6 +15,8 @@ def quick_search() -> Tuple[float, float]:
                 if an.data.EL[i] > 40 and an.data.EL[i] < 50:
                     point = (an.data.AZ[i], an.data.EL[i])
                     an.do_shift(point)
+                    print(point)
+                    print()
                     if an.check_signal() > power:
                         power = an.check_signal()
                         best_point = point
@@ -32,6 +34,7 @@ def search_nearby(point: Tuple[float, float]) -> Tuple[float, float]:
                   an.data.AZ[i] > 0)):
                 move = (an.data.AZ[i], an.data.EL[i])
                 an.do_shift(move)
+                print(move)
                 if an.check_signal() > power:
                     power = an.check_signal()
                     best_move = move
@@ -43,6 +46,7 @@ def search_nearby(point: Tuple[float, float]) -> Tuple[float, float]:
                   an.data.AZ[i] < 360)):
                 move = (an.data.AZ[i], an.data.EL[i])
                 an.do_shift(move)
+                print(move)
                 if an.check_signal() > power:
                     power = an.check_signal()
                     best_move = move
@@ -52,6 +56,7 @@ def search_nearby(point: Tuple[float, float]) -> Tuple[float, float]:
                  an.data.AZ[i] < point[0] + 15):
                 move = (an.data.AZ[i], an.data.EL[i])
                 an.do_shift(move)
+                print(move)
                 if an.check_signal() > power:
                     power = an.check_signal()
                     best_move = move
