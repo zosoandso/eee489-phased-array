@@ -6,7 +6,6 @@ def dumb_search() -> None: # just a test demo don't use
     for i in range(0, len(an.data)):
         point =  (an.data.AZ[i], an.data.EL[i])
         an.do_shift(point)
-        an.plot_beam(point)
 
 def quick_search() -> Tuple[float, float]:
     power = -150
@@ -16,10 +15,11 @@ def quick_search() -> Tuple[float, float]:
                 if an.data.EL[i] > 40 and an.data.EL[i] < 50:
                     point = (an.data.AZ[i], an.data.EL[i])
                     an.do_shift(point)
-                    an.plot_beam(point)
                     if an.check_signal() > power:
                         power = an.check_signal()
-                        best_point = point   
+                        best_point = point
+    an.do_shift(best_point)
+    an.plot_beam(best_point)
     return best_point
 
 def search_nearby(point: Tuple[float, float]) -> Tuple[float, float]:
@@ -32,7 +32,6 @@ def search_nearby(point: Tuple[float, float]) -> Tuple[float, float]:
                   an.data.AZ[i] > 0)):
                 move = (an.data.AZ[i], an.data.EL[i])
                 an.do_shift(move)
-                an.plot_beam(move)
                 if an.check_signal() > power:
                     power = an.check_signal()
                     best_move = move
@@ -44,7 +43,6 @@ def search_nearby(point: Tuple[float, float]) -> Tuple[float, float]:
                   an.data.AZ[i] < 360)):
                 move = (an.data.AZ[i], an.data.EL[i])
                 an.do_shift(move)
-                an.plot_beam(move)
                 if an.check_signal() > power:
                     power = an.check_signal()
                     best_move = move
@@ -54,8 +52,9 @@ def search_nearby(point: Tuple[float, float]) -> Tuple[float, float]:
                  an.data.AZ[i] < point[0] + 15):
                 move = (an.data.AZ[i], an.data.EL[i])
                 an.do_shift(move)
-                an.plot_beam(move)
                 if an.check_signal() > power:
                     power = an.check_signal()
                     best_move = move
+    an.do_shift(best_move)
+    an.plot_beam(best_move)
     return best_move
