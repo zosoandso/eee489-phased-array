@@ -12,7 +12,7 @@ SERIAL = 2
 CLOCK = 4
 ENABLE = 6
 
-board = pyfirmata.ArduinoMega('dev/ttyACM0') # linux
+board = pyfirmata.ArduinoMega('/dev/ttyACM0') # linux
 #board = pyfirmata.ArduinoMega('/dev/cu.usbmodem101') # mac
 #board = pyfirmata.ArduinoDue('COM') # travis' arduino on windows
 data = pd.read_csv('lookangles.csv')
