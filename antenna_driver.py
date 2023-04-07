@@ -48,8 +48,11 @@ def do_shift(point: Tuple[float, float]) -> None: # phase shift command
     write(ENABLE, 0)
 
 def check_signal() -> int:
-    power = sp.run(['iw', 'wlp6s0', 'station', 'dump'])
-    return power
+    power = sp.check_output(['iw', 'wlp6s0', 'station', 'dump'])
+    power = power.decode()
+    power = re.search('signal avg:\t-\d\d', power)
+    power = re.search('-\d\d', power.group())
+    return int(power.group())
 
 def get_rssi_mac() -> int: 
     power = sp.check_output(['airport', '-I'])
