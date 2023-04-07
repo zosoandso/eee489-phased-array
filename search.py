@@ -16,12 +16,12 @@ def quick_search() -> Tuple[float, float]:
                     point = (an.data.AZ[i], an.data.EL[i])
                     an.do_shift(point)
                     print(point)
-                    print()
                     if an.check_signal() > power:
                         power = an.check_signal()
                         best_point = point
     an.do_shift(best_point)
     an.plot_beam(best_point)
+    print(f'\n{best_point}\n')
     return best_point
 
 def search_nearby(point: Tuple[float, float]) -> Tuple[float, float]:
@@ -62,4 +62,5 @@ def search_nearby(point: Tuple[float, float]) -> Tuple[float, float]:
                     best_move = move
     an.do_shift(best_move)
     an.plot_beam(best_move)
+    print(f'\n{best_move}')
     return best_move
