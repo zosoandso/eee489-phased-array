@@ -47,7 +47,7 @@ def do_shift(point: Tuple[float, float]) -> None: # phase shift command
     write(ENABLE, 0)
 
 def check_signal() -> int:
-    power = sp.run(['nmcli', 'device', 'wifi'],
+    power = sp.run(['nmcli', '-t', '-f', 'SSID,SIGNAL', 'device', 'wifi'],
                    check=True, capture_output=True).stdout
     power = power.decode('utf-8')
     return power
