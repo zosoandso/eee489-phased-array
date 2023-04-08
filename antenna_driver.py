@@ -48,17 +48,14 @@ def do_shift(point: Tuple[float, float]) -> None: # phase shift command
     write(ENABLE, 0)
 
 def check_signal() -> int:
-    power = sp.check_output(['iw', 'wlp6s0', 'station', 'dump'])
-    power = power.decode()
-    power = re.search('signal avg:\t-\d\d', power)
-    power = re.search('-\d\d', power.group())
-    return int(power.group())
-
-def get_rssi_mac() -> int:
-    power = sp.check_output(['airport', '-I'])
+    sp.run(['wpa_cli', 'scan'])
+    power = sp.run(['wpa_cli', 'scan_results'],
+                   check=True, capture_output=True)
+    power = sp.run(['grep', 'EEE489Demo'],
+                   input=power.stdout, capture_output=True)
     power = power.decode('utf-8')
-    match = re.search('-\d\d', power)
-    return int(match.group())
+    power = re.search('-\d\d', power)
+    return int(power.group())
 
 def plot_beam(point: Tuple[float, float]) -> None:
     plt.clf()
