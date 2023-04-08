@@ -53,7 +53,7 @@ def check_signal() -> int:
                    check=True, capture_output=True)
     power = sp.run(['grep', 'EEE489Demo'],
                    input=power.stdout, capture_output=True)
-    power = power.decode('utf-8')
+    power = power.stdout.decode('utf-8').strip()
     power = re.search('-\d\d', power)
     return int(power.group())
 
