@@ -10,13 +10,13 @@ import time
 import re
 
 PAUSE = 0.001  # 'clock' period
-SERIAL = 2
+SERIAL = 2     # Arduino pin numbers for SPI bus
 CLOCK = 4
 ENABLE = 6
 
-board = pyfirmata.ArduinoMega('/dev/ttyACM0') # linux
-#board = pyfirmata.ArduinoMega('/dev/cu.usbmodem101') # mac
-#board = pyfirmata.ArduinoDue('COM') # travis' arduino on windows
+board = pyfirmata.ArduinoMega('/dev/ttyACM0') # Linux PC for demo
+#board = pyfirmata.ArduinoMega('/dev/cu.usbmodem101') # Mac for antenna test
+#board = pyfirmata.ArduinoDue('COM?') # Travis' Arduino Due on Windows
 data = pd.read_csv('lookangles.csv')
 
 def write(pin: int, logic: int) -> None:
@@ -36,7 +36,7 @@ def get_shift(point: Tuple[float, float]) -> str: # select wanted EL and AZ
         shift += bits(phase[2])
         shift += bits(phase[3])
     else:
-        shift = '000000000000000000000000'
+        shift = '000000000000000000000000' # failsafe return to (0, 90)
     return shift
 
 def do_shift(point: Tuple[float, float]) -> None: # phase shift command
@@ -58,20 +58,19 @@ def check_signal() -> int:
 def check_ssid(ssid: str) -> bool:
     cmd = 'nmcli dev wifi list --rescan yes | grep '
     cmd += ssid
-    
     check = sp.check_output(cmd, shell=True)
     check = check.decode('utf-8')
     check = re.search(ssid, check)
+
     if check == None:
         return False
     else:
         return True
     
-def connect() -> None:
+def find_ap() -> str:
     ssid = input('Enter SSID: ')
-    pw = getpass.getpass('Enter password: ')
-    pw = "'" + pw + "'"
     connected = False
+
     while not connected:
         for i in range(0, len(data)):
             for angle in [0, 45, 90, 135, 180, 225, 270, 315]:
@@ -79,13 +78,18 @@ def connect() -> None:
                     if data.EL[i] > 40 and data.EL[i] < 50:
                         point = (data.AZ[i], data.EL[i])
                         do_shift(point)
-                        check = check_ssid(ssid)
-                        if check:
+                        try:
+                            check_ssid(ssid)
+                        except:
+                            print('SSID not found. Attempting next point.')
+                        else:
                             connected = True
-                            break
-            else:
-                continue
-            break
+                            return ssid
+
+def connect() -> None:
+    ssid = find_ap()
+    pw = getpass.getpass('Enter password: ')
+    pw = "'" + pw + "'"
     cmd = 'nmcli dev wifi con ' + ssid + ' password ' + pw
     sp.run(cmd, shell=True)
 
