@@ -48,13 +48,10 @@ def do_shift(point: Tuple[float, float]) -> None: # phase shift command
     write(ENABLE, 0)
 
 def check_signal() -> int:
-    cmd = 'wpa_cli scan && wpa_cli scan_results | grep EEE489Demo'
-    power = sp.Popen(cmd, shell=True, stdout=sp.PIPE, stderr=sp.STDOUT)
-    power.wait()
-    power = power.communicate()[0]
+    cmd = 'wpa_cli scan && wpa_cli scan_results | grep EEE489'
+    power = sp.check_output(cmd, shell=True)
     power = power.decode('utf-8')
     power = re.search('-\d\d', power)
-    print(power.group())
     return int(power.group())
 
 def plot_beam(point: Tuple[float, float]) -> None:
