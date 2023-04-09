@@ -69,9 +69,8 @@ def check_ssid(ssid: str) -> bool:
     
 def find_ap() -> str:
     ssid = input('Enter SSID: ')
-    found = False
 
-    while not found:
+    while True:
         for i in range(0, len(data)):
             for angle in [0, 45, 90, 135, 180, 225, 270, 315]:
                 if data.AZ[i] == angle:
@@ -83,7 +82,6 @@ def find_ap() -> str:
                         except:
                             print('SSID not found. Attempting next point.')
                         else:
-                            found = True
                             return ssid
 
 def connect() -> None:
