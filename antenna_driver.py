@@ -51,7 +51,10 @@ def check_signal() -> int:
     cmd = 'wpa_cli scan && wpa_cli scan_results | grep EEE489Demo'
     power = sp.Popen(cmd, shell=True, stdout=sp.PIPE, stderr=sp.STDOUT)
     power = power.communicate()[0]
-    print(power)
+    power = power.decode('utf-8')
+    power = re.search('-\d\d', power)
+    print(power.group())
+    return int(power.group())
 
 def plot_beam(point: Tuple[float, float]) -> None:
     plt.clf()
