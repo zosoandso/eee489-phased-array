@@ -8,7 +8,7 @@ def dumb_search() -> None: # just a test demo don't use
         an.do_shift(point)
 
 def quick_search() -> Tuple[float, float]:
-    power = -150
+    power = -100
     for i in range(0, len(an.data)):
         for angle in [0, 45, 90, 135, 180, 225, 270, 315]:
             if an.data.AZ[i] == angle:

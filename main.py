@@ -5,6 +5,8 @@ while True:
     prompt = input('Enter antenna task: ')
     if prompt == '':
         break
+    elif prompt == 'connect':
+        an.connect()
     elif prompt == 'search':
         point = search.quick_search()
         point = search.search_nearby(point)

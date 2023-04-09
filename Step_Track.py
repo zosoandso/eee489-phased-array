@@ -1,5 +1,5 @@
 from typing import Tuple
-import antenna as an
+import antenna_driver as an
 import numpy as np
 import time
 

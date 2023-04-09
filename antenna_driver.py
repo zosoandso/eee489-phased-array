@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import subprocess as sp
+import getpass
 import pyfirmata
 import time
 import re
@@ -53,6 +54,39 @@ def check_signal() -> int:
     power = power.decode('utf-8')
     power = re.search('-\d\d', power)
     return int(power.group())
+
+def check_ssid(ssid: str) -> bool:
+    cmd = 'nmcli dev wifi list --rescan yes | grep '
+    cmd += ssid
+    
+    check = sp.check_output(cmd, shell=True)
+    check = check.decode('utf-8')
+    check = re.search(ssid, check)
+    if check == None:
+        return False
+    else:
+        return True
+    
+def connect() -> None:
+    ssid = input('Enter SSID: ')
+    pw = getpass.getpass('Enter password: ')
+    connected = False
+    while not connected:
+        for i in range(0, len(data)):
+            for angle in [0, 45, 90, 135, 180, 225, 270, 315]:
+                if data.AZ[i] == angle:
+                    if data.EL[i] > 40 and data.EL[i] < 50:
+                        point = (data.AZ[i], data.EL[i])
+                        do_shift(point)
+                        check = check_ssid(ssid)
+                        if check:
+                            connected = True
+                            break
+            else:
+                continue
+            break
+    cmd = 'nmcli dev wifi con ' + ssid + 'password ' + pw
+    sp.run(cmd, shell=True)
 
 def plot_beam(point: Tuple[float, float]) -> None:
     plt.clf()
