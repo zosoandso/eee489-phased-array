@@ -35,6 +35,8 @@ def Step_Track(current: Tuple[float,float,float],Threshold):
             best=Step_table[I,:][0]
             #assigns best lookangle and RSSI to current
             current=[best[0],best[1],best[2]]
+            an.do_shift([current[0],current[1]])
+
         else:
             Peaked == True
             #if all power values are equal and below threshold, we are not longer tracking, 
