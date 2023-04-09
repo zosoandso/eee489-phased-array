@@ -60,7 +60,7 @@ def Step_Position(current: Tuple[float,float], Dir):
     time.sleep(0.02)
     
     #obtain power value of AP
-    new_power = an.get_rssi()
+    new_power = an.check_signal()
     
     #set antenna back to current position (may not be necessary but avoids any 
     #potential that if routines are jumped, antenna is left in original configuration
