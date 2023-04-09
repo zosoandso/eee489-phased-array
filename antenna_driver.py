@@ -70,6 +70,7 @@ def check_ssid(ssid: str) -> bool:
 def connect() -> None:
     ssid = input('Enter SSID: ')
     pw = getpass.getpass('Enter password: ')
+    pw = "'" + pw + "'"
     connected = False
     while not connected:
         for i in range(0, len(data)):
@@ -85,7 +86,7 @@ def connect() -> None:
             else:
                 continue
             break
-    cmd = 'nmcli dev wifi con ' + ssid + 'password ' + pw
+    cmd = 'nmcli dev wifi con ' + ssid + ' password ' + pw
     sp.run(cmd, shell=True)
 
 def plot_beam(point: Tuple[float, float]) -> None:
