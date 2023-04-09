@@ -48,7 +48,7 @@ def do_shift(point: Tuple[float, float]) -> None: # phase shift command
     write(ENABLE, 0)
 
 def check_signal() -> int:
-    cmd = "iw wlp6s0 station dump | grep 'signal avg"
+    cmd = "iw wlp6s0 station dump | grep 'signal avg'"
     power = sp.check_output(cmd, shell=True)
     power = power.decode('utf-8')
     power = re.search('-\d\d', power)
