@@ -9,7 +9,7 @@ import pyfirmata
 import time
 import re
 
-PAUSE = 0.001  # 'clock' period
+PAUSE = 0.005  # 'clock' period
 SERIAL = 2     # Arduino pin numbers for SPI bus
 CLOCK = 4
 ENABLE = 6
@@ -47,6 +47,7 @@ def do_shift(point: Tuple[float, float]) -> None: # phase shift command
         write(CLOCK, 0)
     write(ENABLE, 1)
     write(ENABLE, 0)
+    plot_beam(point)
 
 def check_signal() -> int:
     cmd = "iw wlp6s0 station dump | grep 'signal avg'"
