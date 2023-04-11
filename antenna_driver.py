@@ -16,7 +16,7 @@ ENABLE = 6
 
 board = pyfirmata.ArduinoMega('/dev/ttyACM0') # Linux PC for demo
 #board = pyfirmata.ArduinoMega('/dev/cu.usbmodem101') # Mac for antenna test
-#board = pyfirmata.ArduinoDue('COM?') # Travis' Arduino Due on Windows
+
 data = pd.read_csv('lookangles.csv')
 
 def write(pin: int, logic: int) -> None:
@@ -59,11 +59,9 @@ def check_signal() -> int:
 def check_ssid(ssid: str) -> bool:
     cmd = 'nmcli dev wifi list --rescan yes | grep '
     cmd += ssid
-    check = sp.check_output(cmd, shell=True)
-    check = check.decode('utf-8')
-    check = re.search(ssid, check)
-
-    if check == None:
+    try:
+        sp.run(cmd, shell=True)
+    except:
         return False
     else:
         return True
@@ -78,11 +76,7 @@ def find_ap() -> str:
                     if data.EL[i] > 40 and data.EL[i] < 50:
                         point = (data.AZ[i], data.EL[i])
                         do_shift(point)
-                        try:
-                            check_ssid(ssid)
-                        except:
-                            print('SSID not found. Attempting next point.')
-                        else:
+                        if check_ssid(ssid):
                             return ssid
 
 def connect() -> None:
@@ -94,9 +88,11 @@ def connect() -> None:
 
 def plot_beam(point: Tuple[float, float]) -> None:
     plt.clf()
+    fig = plt.figure()
 
-    ax = plt.subplot(111, projection='polar')
+    ax = fig.add_subplot(projection='polar')
     ax.scatter((point[0] * np.pi) / 180, point[1])
+
     ax.set_rmax(90)
     ax.set_rticks([15, 30, 45, 60, 75, 90])
     ax.set_theta_offset(np.pi / 2)
