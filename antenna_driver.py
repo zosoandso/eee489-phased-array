@@ -14,8 +14,8 @@ SERIAL = 2     # Arduino pin numbers for SPI bus
 CLOCK = 4
 ENABLE = 6
 
-board = pyfirmata.ArduinoMega('/dev/ttyACM0') # Linux PC for demo
-#board = pyfirmata.ArduinoMega('/dev/cu.usbmodem101') # Mac for antenna test
+#board = pyfirmata.ArduinoMega('/dev/ttyACM0') # Linux PC for demo
+board = pyfirmata.ArduinoMega('/dev/cu.usbmodem1401') # Mac for antenna test
 
 data = pd.read_csv('lookangles.csv')
 
@@ -26,18 +26,28 @@ def write(pin: int, logic: int) -> None:
 def bits(angle: float) -> str:
     return bin(int(angle / 22.5) * 4)[2:].zfill(6)
 
-def get_shift(point: Tuple[float, float]) -> str: # select wanted EL and AZ
-    data = np.loadtxt('lookangles.csv',delimiter=',' ,skiprows=1)
-    phase = data[np.nonzero(np.logical_and(data[:,0]==point[0],
-                                              data[:,1]==point[1]))][0,2:]
-    if phase.shape[0] > 0:
-        shift  = bits(phase[0])
-        shift += bits(phase[1])
-        shift += bits(phase[2])
-        shift += bits(phase[3])
-    else:
-        shift = '000000000000000000000000' # failsafe return to (0, 90)
-    return shift
+def test_board() -> None:
+    for i in range(0, 17):
+        phase = 22.5 * i
+        phase %= 360
+        phase = bits(phase)
+        #print(phase)
+        for j in range(0, 6):
+            write(SERIAL, 1) if phase[j] == '1' else write(SERIAL, 0)
+            write(CLOCK, 1)
+            write(CLOCK, 0)
+        write(ENABLE, 1)
+        write(ENABLE, 0)
+
+def get_shift(point: Tuple[float, float]) -> str:
+    for i in range(0, len(data)):
+        if data.AZ[i] == point[0] and data.EL[i] == point[1]:
+            cmd  = bits(data.J4[i])
+            cmd += bits(data.J3[i])
+            cmd += bits(data.J2[i])
+            cmd += bits(data.J1[i])
+            break
+    return cmd
 
 def do_shift(point: Tuple[float, float]) -> None: # phase shift command
     shift = get_shift(point)
