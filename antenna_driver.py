@@ -59,6 +59,18 @@ def do_shift(point: Tuple[float, float]) -> None: # phase shift command
     write(ENABLE, 0)
     plot_beam(point)
 
+def debug() -> None:
+    write(SERIAL, 1)
+    write(CLOCK, 1)
+    write(CLOCK, 0)
+    write(SERIAL, 0)
+    while True:
+        x = input()
+        if input == '':
+            write(CLOCK, 1)
+            write(CLOCK, 0)
+        else: break
+
 def check_signal() -> int:
     cmd = "iw wlp6s0 station dump | grep 'signal avg'"
     power = sp.check_output(cmd, shell=True)
