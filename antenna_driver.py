@@ -9,7 +9,7 @@ import pyfirmata
 import time
 import re
 
-PAUSE = 0.005  # 'clock' period
+PAUSE = 0.01  # 'clock' period
 SERIAL = 2     # Arduino pin numbers for SPI bus
 CLOCK = 4
 ENABLE = 6
@@ -38,6 +38,7 @@ def test_board() -> None:
             write(CLOCK, 0)
         write(ENABLE, 1)
         write(ENABLE, 0)
+        time.sleep(1)
 
 def get_shift(point: Tuple[float, float]) -> str:
     for i in range(0, len(data)):
@@ -55,6 +56,7 @@ def do_shift(point: Tuple[float, float]) -> None: # phase shift command
         write(SERIAL, 1) if shift[i] == '1' else write(SERIAL, 0)
         write(CLOCK, 1)
         write(CLOCK, 0)
+    time.sleep(0.1)
     write(ENABLE, 1)
     write(ENABLE, 0)
     plot_beam(point)
@@ -66,13 +68,13 @@ def debug() -> None:
     write(SERIAL, 0)
     while True:
         x = input()
-        if input == '':
+        if x == '':
             write(CLOCK, 1)
             write(CLOCK, 0)
         else: break
 
 def check_signal() -> int:
-    cmd = "iw wlp6s0 station dump | grep 'signal avg'"
+    cmd = 'airport -I'
     power = sp.check_output(cmd, shell=True)
     power = power.decode('utf-8')
     power = re.search('-\d\d', power)
@@ -109,17 +111,19 @@ def connect() -> None:
     sp.run(cmd, shell=True)
 
 def plot_beam(point: Tuple[float, float]) -> None:
-    plt.clf()
+    plt.close('all')
+    plt.ion()
     fig = plt.figure()
-
     ax = fig.add_subplot(projection='polar')
-    ax.scatter((point[0] * np.pi) / 180, point[1])
 
+    ax.scatter(point[0] * np.pi / 180, point[1],
+               c=0, s=20, cmap='hsv', alpha=0.75)
     ax.set_rmax(90)
-    ax.set_rticks([15, 30, 45, 60, 75, 90])
     ax.set_theta_offset(np.pi / 2)
-    ax.set_rlabel_position(0)
-    ax.set_ylim([90, 0])
+    ax.set_rticks([15, 30, 45, 60, 75, 90]) # less radial ticks
+    ax.set_rlabel_position(0) # move radial labels away from plotted line
+    ax.invert_yaxis()
     ax.grid(True)
 
-    plt.savefig(fname='point.pdf', format='pdf')
+    fig.canvas.draw()
+    fig.canvas.flush_events()

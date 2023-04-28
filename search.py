@@ -1,11 +1,14 @@
 from typing import Tuple
 
+import time
 import antenna_driver as an
 
 def dumb_search() -> None: # just a test demo don't use
     for i in range(0, len(an.data)):
+        time.sleep(5)
         point =  (an.data.AZ[i], an.data.EL[i])
         an.do_shift(point)
+        an.plot_beam(point)
 
 def quick_search() -> Tuple[float, float]:
     power = -100
@@ -15,6 +18,7 @@ def quick_search() -> Tuple[float, float]:
                 if an.data.EL[i] > 40 and an.data.EL[i] < 50:
                     point = (an.data.AZ[i], an.data.EL[i])
                     an.do_shift(point)
+                    an.plot_beam(point)
                     if an.check_signal() > power:
                         power = an.check_signal()
                         best_point = point
@@ -32,7 +36,7 @@ def search_nearby(point: Tuple[float, float]) -> Tuple[float, float]:
                   an.data.AZ[i] > 0)):
                 move = (an.data.AZ[i], an.data.EL[i])
                 an.do_shift(move)
-                print(move)
+                #print(move)
                 if an.check_signal() > power:
                     power = an.check_signal()
                     best_move = move
@@ -44,7 +48,7 @@ def search_nearby(point: Tuple[float, float]) -> Tuple[float, float]:
                   an.data.AZ[i] < 360)):
                 move = (an.data.AZ[i], an.data.EL[i])
                 an.do_shift(move)
-                print(move)
+                #print(move)
                 if an.check_signal() > power:
                     power = an.check_signal()
                     best_move = move
@@ -54,7 +58,7 @@ def search_nearby(point: Tuple[float, float]) -> Tuple[float, float]:
                  an.data.AZ[i] < point[0] + 15):
                 move = (an.data.AZ[i], an.data.EL[i])
                 an.do_shift(move)
-                print(move)
+                #print(move)
                 if an.check_signal() > power:
                     power = an.check_signal()
                     best_move = move
